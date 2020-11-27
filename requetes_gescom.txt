@@ -53,10 +53,10 @@ ORDER BY cat_name
 
 Q10. Afficher l'organigramme hiérarchique (nom et prénom et poste des employés) du magasin de Compiègne, classer par ordre alphabétique. Afficher le nom et prénom des employés, éventuellement le poste (si vous y parvenez).
 
-(SELECT CONCAT(emp_lastname, '', emp_firstname) AS 'Employé', emp_superior_id FROM employees
+SELECT CONCAT(emp_lastname, '', emp_firstname) AS 'Employé', emp_superior_id FROM employees
 JOIN shops ON employees.emp_sho_id = shops.sho_id
 WHERE shops.sho_id = 3
-ORDER BY CONCAT(emp_lastname, '', emp_firstname) ASC)
+ORDER BY CONCAT(emp_lastname, '', emp_firstname) ASC
 
 Fonctions d'agrégation
 
@@ -94,14 +94,14 @@ WHERE ord_order_date LIKE '%2020%'
 
 Q19. Quel est le panier moyen ?
 
-(SELECT AVG(ode_unit_price / ode_quantity) FROM orders_details)
+SELECT AVG(ode_unit_price / ode_quantity) FROM orders_details
 
 Q20. Lister le total de chaque commande par total décroissant (Afficher numéro de commande, date, total et nom du client).
 
-(SELECT ord_id, ord_order_date, (ode_unit_price * ode_quantity), cus_name ON orders_details
+SELECT ord_id, ord_order_date, (ode_unit_price * ode_quantity), cus_name ON orders_details
 JOIN orders ON orders_details.ode_ord_id = orders.ord_id
 JOIN customers ON orders.ord_cus_id = customers.cus_id
-GROUP BY (ode_unit_price * ode_quantity) DESC)
+GROUP BY (ode_unit_price * ode_quantity) DESC
 
 Les besoins de mise à jour
 Q22. La version 2020 du produit barb004 s'appelle désormais Camper et, bonne nouvelle, son prix subit une baisse de 10%.
