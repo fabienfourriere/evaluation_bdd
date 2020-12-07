@@ -6,7 +6,7 @@ Nom des fichiers coresspondant aux différentes parties de l'évaluation
 
 gescom_eval.lo1
 gescom_eval.loo
-mcd_gescom_eval.jpg
+mcd_eval.jpg
 
 2. Créer la base de données
 
