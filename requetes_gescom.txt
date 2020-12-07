@@ -2,7 +2,7 @@ Cas Gescom : les requêtes
 
 Q1. Afficher dans l'ordre alphabétique et sur une seule colonne les noms et prénoms des employés qui ont des enfants, présenter d'abord ceux qui en ont le plus.
 
-SELECT CONCAT(emp_lastname,'', emp_firstname), emp_children FROM employees
+SELECT CONCAT(emp_lastname,' ', emp_firstname), emp_children FROM employees
 WHERE emp_children >= 1
 ORDER BY emp_children DESC
 
@@ -10,6 +10,11 @@ Q2. Y-a-t-il des clients étrangers ? Afficher leur nom, prénom et pays de rés
 
 SELECT cus_lastname, cus_firstname, cus_countries_id FROM customers
 WHERE cus_countries_id != 'FR'
+
+Requête réécrite en utilisant le nom du pays :
+SELECT cus_lastname, cus_firstname, cou_name FROM customers
+JOIN countries ON customers.cus_countries_id = countries.cou_id
+WHERE cou_name != 'France'
 
 Q3. Afficher par ordre alphabétique les villes de résidence des clients ainsi que le code (ou le nom) du pays.
 
@@ -43,7 +48,7 @@ SELECT pro_id, pro_ref, pro_name, cus_id, ord_id, ode_id FROM products
 JOIN orders_details ON products.pro_id = orders_details.ode_pro_id
 JOIN orders ON orders_details.ode_ord_id = orders.ord_id
 JOIN customers ON orders.ord_cus_id = customers.cus_id
-WHERE customers.cus_id = 51
+WHERE customers.cus_lastname = 'Pikatchien'
 
 Q9. Afficher le catalogue des produits par catégorie, le nom des produits et de la catégorie doivent être affichés.
 
@@ -69,14 +74,14 @@ WHERE ode_discount = (SELECT MAX(ode_discount) FROM orders_details)
 Q13. Combien y-a-t-il de clients canadiens ? Afficher dans une colonne intitulée 'Nb clients Canada'
 
 SELECT COUNT(cus_id) FROM customers
-WHERE cus_countries_id = 'CA'
+JOIN countries ON customers.cus_countries_id = countries.cou_id
+WHERE cou_name = 'Canada'
 
 Q16. Afficher le détail des commandes de 2020.
 
 SELECT ode_id, ode_unit_price, ode_discount, ode_quantity, ode_ord_id, ode_pro_id, ord_order_date FROM orders_details
 JOIN orders ON orders_details.ode_ord_id = orders.ord_id
 WHERE ord_order_date LIKE '%2020%'
-GROUP BY ode_ord_id ASC
 
 Q17. Afficher les coordonnées des fournisseurs pour lesquels des commandes ont été passées.
 
@@ -88,7 +93,7 @@ HAVING COUNT(sup_city) > 1
 
 Q18. Quel est le chiffre d'affaires de 2020 ?
 
-SELECT SUM(ode_unit_price*ode_quantity) FROM orders_details
+SELECT SUM((ode_unit_price*ode_quantity) - ode_discount) FROM orders_details
 JOIN orders ON orders_details.ode_ord_id = orders.ord_id
 WHERE ord_order_date LIKE '%2020%'
 
@@ -106,12 +111,14 @@ GROUP BY (ode_unit_price * ode_quantity) DESC
 Les besoins de mise à jour
 Q22. La version 2020 du produit barb004 s'appelle désormais Camper et, bonne nouvelle, son prix subit une baisse de 10%.
 
-SELECT pro_id, pro_price, (pro_price - (pro_price * 0.10)) FROM products
+UPDATE products
+SET pro_ref = 'Camper', pro_price = 90.00
 WHERE pro_id = 12
 
 Q23. L'inflation en France en 2019 a été de 1,1%, appliquer cette augmentation à la gamme de parasols.
 
-SELECT pro_id, pro_price, (pro_price + (pro_price * 0.011)) FROM products
+UPDATE products
+SET pro_price = (pro_price + (pro_price * 0.011))
 WHERE pro_cat_id = 25
 
 Q24. Supprimer les produits non vendus de la catégorie "Tondeuses électriques". Vous devez utilisez une sous-requête sans indiquer de valeurs de clés.
